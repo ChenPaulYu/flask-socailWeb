@@ -4,3 +4,4 @@ flask-script
 flask-wtf
 bokeh
 pandas
+gunicorn
