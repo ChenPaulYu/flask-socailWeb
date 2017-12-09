@@ -5,6 +5,7 @@ from wtforms import StringField, SubmitField, IntegerField
 from wtforms.validators import Required
 from parsefb.parsefanpage import crawlfb
 import random
+import os 
 # from bokeh.models import (HoverTool, FactorRange, Plot, LinearAxis, Grid,Range1d)
 # from bokeh.models.glyphs import VBar
 # from bokeh.plotting import figure
