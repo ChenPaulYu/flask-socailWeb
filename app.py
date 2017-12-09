@@ -3,7 +3,7 @@ from flask.ext.bootstrap import Bootstrap
 from flask.ext.wtf import Form
 from wtforms import StringField, SubmitField, IntegerField
 from wtforms.validators import Required
-from parsefb.parsefanpage import search
+# from parsefb.parsefanpage import parsefb
 import random
 import os 
 from bokeh.models import (HoverTool, FactorRange, Plot, LinearAxis, Grid,Range1d)
