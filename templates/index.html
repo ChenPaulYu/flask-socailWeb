@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}粉絲專頁分析器{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>{% if state %}{{ state }}{% else %}新增預追蹤的新粉絲專頁{% endif %}</h1>
+</div>
+<form method="POST">
+    
+    {{ form.hidden_tag() }} 
+    <div class="form-group">
+        <div class="form-group">
+            {{ form.name.label}} {{ form.name(class="form-control",placeholder="請輸入粉專全名")}} 
+        </div>
+        <div class="form-group">
+            {{ form.url.label }} {{ form.url(class="form-control",placeholder="請輸入粉專網址")}}
+        </div>
+        <div class="form-group">
+            {{ form.day.label }} {{ form.day(class="form-control",placeholder="本系統僅能分析60天內資料")}}
+        </div>
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+</form>
+
+
+
+{% endblock %}

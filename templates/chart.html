@@ -1,0 +1,51 @@
+
+{% extends "base.html" %} 
+{% block title %}粉絲專頁分析{% endblock %} 
+
+{% block page_content %}
+
+<iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FHuangDaChien%2Fphotos%2Fa.1055875627821376.1073741825.1055855627823376%2F1055875647821374%2F%3Ftype%3D3&width=500"
+    width="500" height="494" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+
+    <link href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.css" rel="stylesheet">
+    <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.0.min.css" rel="stylesheet">
+    <h1>近 {{ bars_count }} 天情緒指數</h1>
+    {{ the_div|safe }}
+    <script src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.js"></script>
+    <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.5.min.js"></script> 
+    {{ the_script|safe }}
+    <br>
+    <br>
+    <br>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <img class="rounded-circle" src="https://cdn2.ettoday.net/images/2144/d2144460.jpg" alt="Generic placeholder image"
+                    width="140" height="140">
+            <h2>第一熱門</h2>
+            <p>時尚雙人組 阿翰說這張比較好看，要Po這張 #ppgetawayparty</p>
+            <p>
+                <a class="btn btn-secondary" href="#" role="button">View details &raquo;</a>
+            </p>
+            </div>
+        <div class="col-lg-4">
+            <img class="rounded-circle" src="https://imgur.dcard.tw/PWLx3I0.jpg" alt="Generic placeholder image"
+                    width="140" height="140">
+            <h2>第二熱門</h2>
+            <p>太久以前錄的影片，我都忘記當初講了甚麼 導致我竟然會被自己講的話戳到笑點</p>
+            <p>
+                <a class="btn btn-secondary" href="#" role="button">View details &raquo;</a>
+            </p>
+        </div>
+        <div class="col-lg-4">
+            <img class="rounded-circle" src="https://scontent-tpe1-1.xx.fbcdn.net/v/t31.0-8/22339687_1459156980826570_2108607271831107887_o.jpg?oh=45f9a26c01b98645f06087841f8cc864&oe=5A6F172E" alt="Generic placeholder image"
+                    width="140" height="140">
+            <h2>第三熱門</h2>
+            <p>朋友：「欸你讀政大傳院應該有學到很多實用的修圖技巧吧？」 我：</p>
+            <p>
+                <a class="btn btn-secondary" href="#" role="button">View details &raquo;</a>
+            </p>
+        </div>
+    </div>
+    
+{% endblock %}
