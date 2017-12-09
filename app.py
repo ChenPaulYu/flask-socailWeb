@@ -3,7 +3,7 @@ from flask.ext.bootstrap import Bootstrap
 from flask.ext.wtf import Form
 from wtforms import StringField, SubmitField, IntegerField
 from wtforms.validators import Required
-from parsefb.parsefanpage import crawlfb
+from parsefb.parsefanpage import search
 import random
 import os 
 from bokeh.models import (HoverTool, FactorRange, Plot, LinearAxis, Grid,Range1d)
@@ -24,14 +24,22 @@ def index():
     state = None
     form = NameForm()
     if form.validate_on_submit():
-        name = form.name.data
-        url  = form.url.data
-        day = form.day.data
-        form.name.data = ''
-        form.url.data = ''
-        form.day.data = ''
+        account = form.account.data
+        code = form.code.data
+        want = form.want.data
+        order = form.order.data
+        daylength = form.daylength.data
+
+        form.account.data = ''
+        form.code.data = ''
+        form.want.data = ''
+        form.order.data = ''
+        form.daylength.data = ''
+        
+        # search(account, code, want, order, daylength)
+
         # try:
-        crawlfb(name, url, day)
+        # crawlfb(name, url, day)
         state = '成功新增'
         # except:
         #     state = '新增失敗'
@@ -55,9 +63,11 @@ def chart():
 
 
 class NameForm(Form):
-    name = StringField('粉絲專頁名稱', validators=[Required()])
-    url  = StringField('粉絲專頁網址', validators=[Required()])
-    day = StringField('預計分析天數', validators=[Required()])
+    account = StringField('帳戶', validators=[Required()])
+    code = StringField('密碼', validators=[Required()])
+    want = StringField('關鍵字', validators=[Required()])
+    order = StringField('想取幾名', validators=[Required()])
+    daylength = StringField('天數', validators=[Required()])
     submit = SubmitField('確認')
 
 
