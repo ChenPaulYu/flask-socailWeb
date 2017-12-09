@@ -5,20 +5,37 @@ Created on Wed Nov  1 13:06:35 2017
 @author: cure8
 """
 
-def crawlfb(fanpage_name, url, daylen):
+import os
+import shutil
+import datetime
+import requests
+import pandas as pd 
+from dateutil.parser import parse
+import sys
+import time
+from selenium import webdriver
 
-    import os
-    import shutil
-    import datetime
-    import requests
-    import pandas as pd 
-    from dateutil.parser import parse
+#'fanpage_name'請輸入欲爬取的粉專名稱，資料型態需使用字串
+#'url'請輸入欲爬取的粉專首頁網址，資料型態需使用字串
+#"daylen"請輸入欲爬取近"幾"天的文章，輸入數字即可，唯資料型態也需使用字串
+
+def hasSelector(selector):
+    try:
+        driver.find_element_by_css_selector(selector)
+        return True
+    except:
+        return False
+
+def crawlfb(fanpage_name, url, daylen):
 
     #以下token為永遠權限不會到期
     #儲存路徑是設定在我自己電腦的你們可以改!
+    #path = 'C:\\Users\\cure8\\Desktop\\實習資訊\\DIGI+Talent\\Team project_Code\\' + fanpage_name
 
     token = 'EAACRsaKtrOABANosgm3IbdMT9seNS2NtxZAuqxouZCp8oBKFW1PPD1R6qgf5wLoSvDzgrOMh2IVDV6pGopOqmy8jp4LZCre1lRIZCLU339xTV3QUW8D5cfzKke8q9oy3LaBAhjfVMuIuUDGImtz4ZCGUsyadsKlrpvP6f2VLFtgZDZD'
-    path = './fanpage/' + fanpage_name
+    global path1
+    #path1 = 'C:\\Users\\cure8\\Desktop\\實習資訊\\DIGI+Talent\\Team project_Code'
+    path = path1 + '\\' + fanpage_name
     
     #新增資料夾以供excel儲存
     
@@ -30,8 +47,7 @@ def crawlfb(fanpage_name, url, daylen):
     #抓取粉專按讚人數、頭貼、封面照片
 
     res = requests.get('https://graph.facebook.com/v2.10/%s/posts?limit=100&access_token=%s' %(url, token))
-    res = requests.get('https://graph.facebook.com/v2.10/%s/posts?limit=100&access_token=%s' % (res.json()['id'], token))
-
+    res = requests.get('https://graph.facebook.com/v2.10/%s/posts?limit=100&access_token=%s' %(res.json()['id'], token))
 
     fanpage = []
     res1 = requests.get('https://graph.facebook.com/v2.10/%s?fields=fan_count, picture, cover&access_token=%s' %(url, token))
@@ -122,3 +138,127 @@ def crawlfb(fanpage_name, url, daylen):
         df = pd.DataFrame(locals()['comments_list_%s' %(i)], columns = ['時間', 'ID', '名字', '留言內容'])
         name = '第'+str(i)+'篇文章留言.csv'
         df.to_csv(os.path.join(path, name), index=False, encoding='UTF-8')
+
+
+#"account"請輸入你的facebook帳號
+#"code"請輸入你的facebook密碼
+#"want"請輸入想搜尋的關鍵字，型態為字串
+#"daylen"請輸入想搜尋的天數(距離現在幾天)，型態同為字串
+
+def search(account ,code ,want ,order , daylength):
+    
+    global driver
+
+    if sys.platform == 'linux':
+        driver = webdriver.Chrome(os.path.relpath('./linux/chromedriver'))
+    elif sys.platform == 'win32':
+        driver = webdriver.Chrome(os.path.relpath('./windows/chromedriver.exe'))
+    elif sys.platform == 'darwin':
+        driver = webdriver.Chrome(os.path.relpath('./mac/chromedriver'))
+
+    if account == '':
+        account = 'ericsyu0801@gmail.com'
+        code = 'bloggerscout'
+    
+    if order == '':
+        order = '3'
+        
+    if daylength == '':
+        daylength = '3'
+        
+    order = int(order)
+    daylength = int(daylength)
+        
+    url = 'https://www.facebook.com/'
+
+    driver.get(url)
+
+    time.sleep(2)
+
+    user = driver.find_element_by_css_selector('#email')
+    user.send_keys(account)
+    password = driver.find_element_by_css_selector('#pass')
+    password.send_keys(code)
+
+    login = driver.find_element_by_css_selector('#loginbutton')
+    login.click()
+    
+    time.sleep(12)
+    
+    if hasSelector('body > div._n8._3qx.uiLayer._3qw > div._3ixn'):
+        space = driver.find_element_by_css_selector('body > div._n8._3qx.uiLayer._3qw > div._3ixn')
+        space.click()
+
+    if hasSelector('body > div._10.uiLayer._4-hy._3qw > div._59s7 > div > div > div > div > div._5a8u._5lnf.uiOverlayFooter > div > div > div._ohf.rfloat > div > a.layerCancel._4jy0._4jy3._517h._51sy._42ft'):
+        cancel = driver.find_element_by_css_selector('body > div._10.uiLayer._4-hy._3qw > div._59s7 > div > div > div > div > div._5a8u._5lnf.uiOverlayFooter > div > div > div._ohf.rfloat > div > a.layerCancel._4jy0._4jy3._517h._51sy._42ft')
+        cancel.click()
+
+    keyword = driver.find_element_by_class_name('_1frb')
+    keyword.send_keys(want)
+
+    search = driver.find_element_by_class_name('_585_')
+    search.click()
+
+    time.sleep(4)
+
+    page = driver.find_element_by_link_text('粉絲專頁')
+    page.click()
+
+    time.sleep(10)
+
+    results = driver.find_elements_by_class_name('_32mo')
+
+    global searresults
+    searresults = []
+
+    for result in results:
+        searresult = []
+        searresult.append(result.text)
+        #temp = result.find_element_by_xpath('..')
+        temp = result.get_attribute('href')
+        temp = temp.strip('?ref=br_rs')
+        searresult.append(temp)
+        searresults.append(searresult)
+        
+    print()    
+    print('粉絲專頁搜尋結果如下：')
+    print()
+
+    for i in searresults:
+        print(i)
+        
+    for i in searresults:
+        token = 'EAACRsaKtrOABANosgm3IbdMT9seNS2NtxZAuqxouZCp8oBKFW1PPD1R6qgf5wLoSvDzgrOMh2IVDV6pGopOqmy8jp4LZCre1lRIZCLU339xTV3QUW8D5cfzKke8q9oy3LaBAhjfVMuIuUDGImtz4ZCGUsyadsKlrpvP6f2VLFtgZDZD'
+        res = requests.get('https://graph.facebook.com/v2.10/%s?fields=fan_count, location&access_token=%s' %(i[1], token))
+        i.append(res.json()['fan_count'])
+        if 'location' in res.json():
+            i.append(res.json()['location'])
+        else:
+            i.append('N/A')
+    
+    i = len(searresults)-1
+    
+    while i > 0:
+        for j in range(0, i):
+            if searresults[j][2] < searresults[j+1][2]:
+                searresults[j], searresults[j+1] = searresults[j+1], searresults[j]
+        i = i-1   
+
+    for i in searresults:
+        i.insert(3, searresults.index(i)+1)
+
+    print()    
+    print('粉絲人數前%d名結果如下：' %(order))
+    print()
+
+    for i in range(0, order):
+        # print(searresults[i])
+        return searresult;
+        
+    # for i in range(0, order):
+    #     print()
+    #     print('現在開始抓取 --> %s 粉專' %(searresults[i][0]))
+    #     crawlfb(searresults[i][0], searresults[i][1], daylength)
+
+
+x
