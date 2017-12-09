@@ -1,7 +1,0 @@
-flask
-flask-bootstrap
-flask-script
-flask-wtf
-bokeh
-pandas
-gunicorn
