@@ -63,7 +63,7 @@ def chart():
 
 
 class NameForm(Form):
-    account = StringField('帳戶', validators=[Required()])
+    account = StringField('帳號', validators=[Required()])
     code = StringField('密碼', validators=[Required()])
     want = StringField('關鍵字', validators=[Required()])
     order = StringField('想取幾名', validators=[Required()])
